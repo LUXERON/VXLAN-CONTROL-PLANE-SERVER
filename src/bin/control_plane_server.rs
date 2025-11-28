@@ -637,12 +637,25 @@ fn print_banner() {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Initialize logging
     tracing_subscriber::fmt()
-        .with_env_filter("symmetrix=info,control_plane=info")
+        .with_env_filter(
+            std::env::var("RUST_LOG")
+                .unwrap_or_else(|_| "symmetrix=info,control_plane=info".to_string())
+        )
         .init();
 
     print_banner();
 
     // Load configuration from environment
+    // Render uses PORT env var, fall back to HTTP_PORT or default 8080
+    let http_port = std::env::var("PORT")
+        .ok()
+        .and_then(|s| s.parse().ok())
+        .or_else(|| std::env::var("HTTP_PORT").ok().and_then(|s| s.parse().ok()))
+        .unwrap_or(8080);
+
+    info!("🔧 Configuration:");
+    info!("   HTTP Port: {} (from PORT or HTTP_PORT env)", http_port);
+
     let config = ServerConfig {
         vxlan_bind: std::env::var("VXLAN_BIND").unwrap_or_else(|_| "0.0.0.0".to_string()),
         vxlan_port: std::env::var("VXLAN_PORT")
@@ -650,10 +663,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .and_then(|s| s.parse().ok())
             .unwrap_or(4789),
         http_bind: std::env::var("HTTP_BIND").unwrap_or_else(|_| "0.0.0.0".to_string()),
-        http_port: std::env::var("HTTP_PORT")
-            .ok()
-            .and_then(|s| s.parse().ok())
-            .unwrap_or(8080),
+        http_port,
         cache_size: std::env::var("CACHE_SIZE_MB")
             .ok()
             .and_then(|s| s.parse::<usize>().ok())
@@ -664,6 +674,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .and_then(|s| s.parse().ok())
             .unwrap_or(10000),
     };
+
+    info!("   VXLAN Port: {}", config.vxlan_port);
+    info!("   Cache Size: {} MB", config.cache_size / (1024 * 1024));
+    info!("   Max Connections: {}", config.max_connections);
 
     // Create and start server
     let server = ControlPlaneServer::new(config).await?;

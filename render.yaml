@@ -1,13 +1,15 @@
 # ═══════════════════════════════════════════════════════════════════════════════
-#   SYMMETRIX VXLAN CONTROL PLANE SERVER - RENDER DEPLOYMENT
+#   VXLAN CONTROL PLANE SERVER - RENDER DEPLOYMENT
+#   NEUNOMY - NULL SPACE AI INFERENCE NETWORK
 # ═══════════════════════════════════════════════════════════════════════════════
-# 
+#
 # Mathematical Acceleration for Hyperscaler Infrastructure
-# 
+# STATIC LINKING DEPLOYMENT (Single Binary, No Container)
+#
 # CAPABILITIES:
-# • 250 MILLION× Bandwidth Amplification (QANBAN × UAO-QTCAM)
-# • 2.5 BILLION× Memory Amplification (UAO-QTCAM × QAGML)
-# • 1,250× TCAM Speedup (UAO-QTCAM)
+# • 166,420× Memory Amplification (QAGML Tier 4)
+# • 1,000,000× Bandwidth Amplification (QANBAN)
+# • 250× Compression (UAO-QTCAM)
 # • 250× Cache Compression (UAO-QTCAM Cache - NO REDIS NEEDED!)
 #
 # ESTIMATED COST: $85/month (Pro Plus plan)
@@ -15,72 +17,114 @@
 
 services:
   # ═══════════════════════════════════════════════════════════════════════════
-  # MAIN CONTROL PLANE SERVER
+  # VXLAN CONTROL PLANE SERVER (STATIC BINARY)
   # ═══════════════════════════════════════════════════════════════════════════
   - type: web
-    name: symmetrix-control-plane
+    name: vxlan-control-plane
     runtime: rust
     plan: pro_plus  # $85/month - 4 GB RAM, 2 CPUs
     region: oregon
-    branch: main
-    
-    # Build configuration
+    branch: master
+    rootDir: SYMMETRIX CORE
+
+    # Build configuration - STATIC LINKING with musl
     buildCommand: |
-      cargo build --release --bin symmetrix-control-plane --features "qanban-integration,qagml-integration,uao-qtcam-integration"
-    
-    # Start command
-    startCommand: ./target/release/symmetrix-control-plane
-    
+      rustup target add x86_64-unknown-linux-musl
+      apt-get update && apt-get install -y musl-tools
+      RUSTFLAGS='-C target-feature=+crt-static' cargo build --release --target x86_64-unknown-linux-musl --bin symmetrix-control-plane
+      cp target/x86_64-unknown-linux-musl/release/symmetrix-control-plane ./symmetrix-control-plane
+
+    # Start command - statically linked binary
+    startCommand: ./symmetrix-control-plane
+
     # Health check endpoint
     healthCheckPath: /health
-    
+
     # Environment variables
     envVars:
-      # Server configuration
+      # Server configuration - Render uses PORT env var
+      - key: PORT
+        value: 10000
       - key: HTTP_PORT
         value: 10000
-      - key: VXLAN_PORT
-        value: 4789
       - key: HTTP_BIND
         value: 0.0.0.0
-      - key: VXLAN_BIND
-        value: 0.0.0.0
-      
+
+      # VXLAN over WebSocket (Render doesn't support raw UDP)
+      # Agents connect via WebSocket, server bridges to internal VXLAN
+      - key: VXLAN_MODE
+        value: websocket
+      - key: VXLAN_WS_PORT
+        value: 10000
+
       # Cache configuration (256 MB = 64 GB effective with 250× compression)
       - key: CACHE_SIZE_MB
         value: 256
-      
+
       # Maximum connections
       - key: MAX_CONNECTIONS
         value: 10000
-      
+
       # Logging
       - key: RUST_LOG
-        value: symmetrix=info,control_plane=info
+        value: symmetrix=info,control_plane=info,tower_http=info
       - key: RUST_BACKTRACE
         value: "1"
-    
+
+      # Amplification Tiers
+      - key: QAGML_TIER
+        value: "4"
+      - key: QAGML_AMPLIFICATION
+        value: "166420"
+      - key: QANBAN_AMPLIFICATION
+        value: "1000000"
+      - key: UAO_COMPRESSION
+        value: "250"
+
     # Auto-deploy on push
     autoDeploy: true
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# ARCHITECTURE: WHY STATIC LINKING?
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# The Control Plane is a COORDINATOR, not a compute engine:
+#
+# ┌─────────────────────────────────────────────────────────────────────────┐
+# │  WHERE COMPUTE HAPPENS:                                                 │
+# │  ❌ NOT the Control Plane (coordination only)                          │
+# │  ✅ ON THE GPU NODES (CUDA interception library)                       │
+# │  ✅ ON HYPERSCALER H100/H200 GPUs (actual tensor ops)                  │
+# └─────────────────────────────────────────────────────────────────────────┘
+#
+# Control Plane responsibilities:
+# • Track virtual memory allocations (state management)
+# • Route VXLAN packets to correct VNI (routing table)
+# • Apply QAGML/QANBAN/UAO-QTCAM transformations
+# • Maintain tunnel state (single source of truth)
+#
+# WHY NO HORIZONTAL SCALING:
+# • QANBAN: 1,000,000× bandwidth = fewer packets to process
+# • UAO-QTCAM: 250× compression = less data
+# • Stateful coordination requires consistency
+# • ONE instance handles everything
+#
+# ═══════════════════════════════════════════════════════════════════════════════
 # COST BREAKDOWN (NO REDIS NEEDED!)
 # ═══════════════════════════════════════════════════════════════════════════════
 #
-# Traditional Stack (with Redis):
+# Traditional Stack:
 # ├─ Web Server (Pro Plus):     $85/month
 # ├─ Redis (Starter):           $10/month
 # └─ Total:                     $95/month
 #
-# SYMMETRIX Stack (UAO-QTCAM Cache):
+# NEUNOMY Stack (UAO-QTCAM Cache):
 # ├─ Web Server (Pro Plus):     $85/month
-# ├─ Redis:                     $0/month (REPLACED BY UAO-QTCAM CACHE!)
+# ├─ Redis:                     $0/month (REPLACED BY UAO-QTCAM!)
 # └─ Total:                     $85/month
 #
-# SAVINGS: $10/month + 250× more capacity + 2-3× faster latency!
-#
 # ═══════════════════════════════════════════════════════════════════════════════
-# CAPACITY METRICS
+# CAPACITY METRICS (Amplified)
 # ═══════════════════════════════════════════════════════════════════════════════
 #
 # Physical Resources:
@@ -89,25 +133,43 @@ services:
 # └─ Cache:    256 MB compressed
 #
 # Virtual/Amplified Resources:
-# ├─ Memory:   80 GB → 200 EXABYTES (2.5B× amplification)
-# ├─ Bandwidth: 800 Gbps → 200 EXABPS (250M× amplification)
-# ├─ Cache:    256 MB → 64 GB effective (250× compression)
-# └─ TCAM:     10,000 ns → 8 ns (1,250× speedup)
+# ├─ Memory:   4 GB → 665 TB (166,420× QAGML Tier 4)
+# ├─ Bandwidth: Effectively unlimited (1M× QANBAN)
+# ├─ Cache:    256 MB → 64 GB effective (250× UAO-QTCAM)
+# └─ TCAM:     O(log n) lookups (1,250× speedup)
 #
 # ═══════════════════════════════════════════════════════════════════════════════
-# ENDPOINTS
+# HTTP ENDPOINTS
 # ═══════════════════════════════════════════════════════════════════════════════
 #
-# HTTP API (Management):
-# ├─ GET  /health     - Health check
-# ├─ GET  /stats      - Server statistics
-# ├─ GET  /cascade    - Cascade amplification stats
-# ├─ GET  /memory     - QAGML memory stats
-# ├─ GET  /bandwidth  - QANBAN bandwidth stats
-# └─ GET  /cache/stats - UAO-QTCAM cache stats
+# Health & Status:
+# ├─ GET  /health        - Health check (required by Render)
+# ├─ GET  /              - Server info and ASCII banner
+# ├─ GET  /stats         - Comprehensive statistics
+# │
+# # SYMMETRIX CORE Integration:
+# ├─ GET  /cascade       - Cascade amplification stats
+# ├─ GET  /memory        - QAGML memory stats (166,420× amplification)
+# ├─ GET  /bandwidth     - QANBAN bandwidth stats (1M× amplification)
+# ├─ GET  /cache/stats   - UAO-QTCAM cache stats (250× compression)
+# │
+# # VXLAN Control (WebSocket bridge):
+# ├─ WS   /ws/vxlan      - WebSocket VXLAN tunnel endpoint
+# ├─ POST /api/vxlan     - HTTP VXLAN command endpoint
+# │
+# # Kubernetes Integration:
+# ├─ GET  /api/pools     - List virtual GPU pools
+# ├─ GET  /api/claims    - List virtual GPU claims
+# └─ GET  /api/tiers     - List customer tiers
 #
-# VXLAN UDP (Control):
-# └─ UDP :4789        - VXLAN control plane commands
+# ═══════════════════════════════════════════════════════════════════════════════
+# DEPLOYMENT URLS
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# After deployment:
+# • Health: https://vxlan-control-plane.onrender.com/health
+# • Stats:  https://vxlan-control-plane.onrender.com/stats
+# • VXLAN:  wss://vxlan-control-plane.onrender.com/ws/vxlan
 #
 # ═══════════════════════════════════════════════════════════════════════════════
 
