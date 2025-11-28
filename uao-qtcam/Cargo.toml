@@ -1,0 +1,78 @@
+[package]
+name = "uao-qtcam-unified"
+version = "1.0.0"
+edition = "2021"
+authors = ["LUXERON <luxeron@github.com>"]
+description = "UAO-QTCAM: Unified Software-Defined TCAM - Production-Ready Routing Intelligence"
+license = "MIT"
+repository = "https://github.com/LUXERON/UAO-QTCAM"
+
+[dependencies]
+# Core dependencies
+nalgebra = "0.33"
+tokio = { version = "1.48", features = ["full"] }
+axum = "0.7"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+anyhow = "1.0"
+
+# Concurrency
+parking_lot = "0.12"
+crossbeam = "0.8"
+rayon = "1.11"
+dashmap = "5.5"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Random number generation
+rand = "0.8"
+
+# HTTP
+tower = "0.5"
+tower-http = { version = "0.6", features = ["cors", "trace"] }
+
+# CLI
+clap = { version = "4.5", features = ["derive"] }
+env_logger = "0.11"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
+
+[profile.dev]
+opt-level = 1
+
+[[bin]]
+name = "uao-qtcam-unified"
+path = "src/main.rs"
+
+[lib]
+name = "uao_qtcam_unified"
+path = "src/lib.rs"
+
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+
+[[bench]]
+name = "performance"
+harness = false
+
+[[bench]]
+name = "revolutionary_benchmark"
+harness = false
+
+[[bench]]
+name = "all_phases_benchmark"
+harness = false
+
+[[bench]]
+name = "phase3_v2_revolutionary_benchmark"
+harness = false
+
+[[bench]]
+name = "phase3_v3_ultimate_benchmark"
+harness = false

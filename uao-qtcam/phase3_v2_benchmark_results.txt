@@ -1,0 +1,346 @@
+   Compiling uao-qtcam-unified v1.0.0 (/mnt/c/VINDUREX/MY PYTHON_BIZ _DEV/ECDLP SPECTRAL SOLVER/uao_qtcam_unified)
+warning: unused imports: `Result` and `anyhow`
+ --> src/phase3/dimensional_folding.rs:7:14
+  |
+7 | use anyhow::{Result, anyhow};
+  |              ^^^^^^  ^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `anyhow::Result`
+ --> src/phase3/laplacian_qlearning.rs:7:5
+  |
+7 | use anyhow::Result;
+  |     ^^^^^^^^^^^^^^
+
+warning: unused import: `anyhow::Result`
+ --> src/phase3/pme_engine.rs:7:5
+  |
+7 | use anyhow::Result;
+  |     ^^^^^^^^^^^^^^
+
+warning: unused import: `std::f64::consts::PI`
+ --> src/phase3/pme_engine.rs:8:5
+  |
+8 | use std::f64::consts::PI;
+  |     ^^^^^^^^^^^^^^^^^^^^
+
+warning: unused variable: `prefix_addr`
+   --> src/phase3/pme_engine.rs:134:17
+    |
+134 |             let prefix_addr = self.ip_to_position(self.particles[idx].position[0] as u32);
+    |                 ^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_prefix_addr`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: fields `quantum_state`, `cluster_id`, and `compressed_coords` are never read
+  --> src/phase2/qagfhg_engine.rs:56:5
+   |
+52 | struct RouteEntry {
+   |        ---------- fields in this struct
+...
+56 |     quantum_state: QuantumState,
+   |     ^^^^^^^^^^^^^
+57 |     cluster_id: u16,
+   |     ^^^^^^^^^^
+58 |     compressed_coords: [f32; 4],
+   |     ^^^^^^^^^^^^^^^^^
+   |
+   = note: `RouteEntry` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: fields `spectral_analyzer`, `dimensional_folder`, `hint_generator`, and `target_dim` are never read
+  --> src/phase2/qagfhg_engine.rs:66:5
+   |
+62 | pub struct QAGFHGEngine {
+   |            ------------ fields in this struct
+...
+66 |     spectral_analyzer: Arc<RwLock<SpectralAnalyzer>>,
+   |     ^^^^^^^^^^^^^^^^^
+67 |     /// Dimensional folder
+68 |     dimensional_folder: Arc<RwLock<DimensionalFolder>>,
+   |     ^^^^^^^^^^^^^^^^^^
+69 |     /// Hardware hint generator
+70 |     hint_generator: Arc<HintGenerator>,
+   |     ^^^^^^^^^^^^^^
+...
+76 |     target_dim: usize,
+   |     ^^^^^^^^^^
+
+warning: fields `eigenstate`, `morton_code`, and `cluster_id` are never read
+  --> src/phase2/qagfhg_v2_engine.rs:24:5
+   |
+22 | struct CollapsedQuantumState {
+   |        --------------------- fields in this struct
+23 |     /// Pre-computed eigenstate (collapsed)
+24 |     eigenstate: u32,
+   |     ^^^^^^^^^^
+25 |     /// Morton-encoded 4D coordinates (Z-order curve)
+26 |     morton_code: u64,
+   |     ^^^^^^^^^^^
+27 |     /// Cluster ID from bit pattern (O(1) computation)
+28 |     cluster_id: u16,
+   |     ^^^^^^^^^^
+   |
+   = note: `CollapsedQuantumState` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: field `tensor_factors` is never read
+  --> src/phase3/scrtt_engine.rs:29:5
+   |
+22 | struct HybridTrieNode {
+   |        -------------- field in this struct
+...
+29 |     tensor_factors: Vec<TensorFactor>,
+   |     ^^^^^^^^^^^^^^
+   |
+   = note: `HybridTrieNode` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: fields `left_child` and `right_child` are never read
+  --> src/phase3/scrtt_engine.rs:44:5
+   |
+34 | struct PatriciaNode {
+   |        ------------ fields in this struct
+...
+44 |     left_child: Option<u32>,
+   |     ^^^^^^^^^^
+45 |     right_child: Option<u32>,
+   |     ^^^^^^^^^^^
+   |
+   = note: `PatriciaNode` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: fields `vector` and `weight` are never read
+  --> src/phase3/scrtt_engine.rs:52:5
+   |
+50 | struct TensorFactor {
+   |        ------------ fields in this struct
+51 |     /// Factor vector
+52 |     vector: Vec<f32>,
+   |     ^^^^^^
+53 |     /// Weight (λ in CP decomposition)
+54 |     weight: f32,
+   |     ^^^^^^
+   |
+   = note: `TensorFactor` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: fields `prefix`, `next_hop`, `metric`, and `cohomology_class` are never read
+  --> src/phase3/scrtt_engine.rs:61:5
+   |
+59 | struct SheafSection {
+   |        ------------ fields in this struct
+60 |     /// Prefix covered by this section
+61 |     prefix: Prefix,
+   |     ^^^^^^
+62 |     /// Next hop
+63 |     next_hop: String,
+   |     ^^^^^^^^
+64 |     /// Metric
+65 |     metric: u32,
+   |     ^^^^^^
+66 |     /// Cohomology class (for consistency checking)
+67 |     cohomology_class: u32,
+   |     ^^^^^^^^^^^^^^^^
+   |
+   = note: `SheafSection` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: fields `christoffel_symbols` and `ricci_scalar` are never read
+  --> src/phase3/dimensional_folding.rs:14:5
+   |
+12 | pub struct RiemannManifold {
+   |            --------------- fields in this struct
+13 |     /// Christoffel symbols for geodesic computation
+14 |     christoffel_symbols: Vec<f64>,
+   |     ^^^^^^^^^^^^^^^^^^^
+...
+18 |     ricci_scalar: f64,
+   |     ^^^^^^^^^^^^
+   |
+   = note: `RiemannManifold` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: method `compute_christoffel_symbols` is never used
+  --> src/phase3/dimensional_folding.rs:38:8
+   |
+21 | impl RiemannManifold {
+   | -------------------- method in this implementation
+...
+38 |     fn compute_christoffel_symbols(&mut self) {
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: field `stats` is never read
+  --> src/phase3/scrtt_v2_engine.rs:70:5
+   |
+53 | pub struct SCRTTv2Engine {
+   |            ------------- field in this struct
+...
+70 |     stats: Arc<SCRTTv2Stats>,
+   |     ^^^^^
+
+warning: fields `p50_latency_ns`, `p95_latency_ns`, and `p99_latency_ns` are never read
+  --> src/unified/performance_monitor.rs:20:5
+   |
+14 | struct Metrics {
+   |        ------- fields in this struct
+...
+20 |     p50_latency_ns: u64,
+   |     ^^^^^^^^^^^^^^
+21 |     p95_latency_ns: u64,
+   |     ^^^^^^^^^^^^^^
+22 |     p99_latency_ns: u64,
+   |     ^^^^^^^^^^^^^^
+   |
+   = note: `Metrics` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: `uao-qtcam-unified` (lib) generated 16 warnings (run `cargo fix --lib -p uao-qtcam-unified` to apply 4 suggestions)
+    Finished `bench` profile [optimized] target(s) in 27.56s
+     Running benches/phase3_v2_revolutionary_benchmark.rs (target/release/deps/phase3_v2_revolutionary_benchmark-1074727a47653f05)
+Gnuplot not found, using plotters backend
+Benchmarking phase3_v2_single_lookup/100
+Benchmarking phase3_v2_single_lookup/100: Warming up for 3.0000 s
+Benchmarking phase3_v2_single_lookup/100: Collecting 100 samples in estimated 5.0005 s (13M iterations)
+Benchmarking phase3_v2_single_lookup/100: Analyzing
+phase3_v2_single_lookup/100
+                        time:   [360.59 ns 366.89 ns 373.36 ns]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+Benchmarking phase3_v2_single_lookup/500
+Benchmarking phase3_v2_single_lookup/500: Warming up for 3.0000 s
+Benchmarking phase3_v2_single_lookup/500: Collecting 100 samples in estimated 5.0017 s (3.4M iterations)
+Benchmarking phase3_v2_single_lookup/500: Analyzing
+phase3_v2_single_lookup/500
+                        time:   [1.4270 µs 1.4565 µs 1.4872 µs]
+Found 5 outliers among 100 measurements (5.00%)
+  5 (5.00%) high mild
+Benchmarking phase3_v2_single_lookup/1000
+Benchmarking phase3_v2_single_lookup/1000: Warming up for 3.0000 s
+Benchmarking phase3_v2_single_lookup/1000: Collecting 100 samples in estimated 5.0147 s (1.6M iterations)
+Benchmarking phase3_v2_single_lookup/1000: Analyzing
+phase3_v2_single_lookup/1000
+                        time:   [3.0602 µs 3.0924 µs 3.1277 µs]
+Found 8 outliers among 100 measurements (8.00%)
+  8 (8.00%) high mild
+Benchmarking phase3_v2_single_lookup/5000
+Benchmarking phase3_v2_single_lookup/5000: Warming up for 3.0000 s
+Benchmarking phase3_v2_single_lookup/5000: Collecting 100 samples in estimated 5.0049 s (318k iterations)
+Benchmarking phase3_v2_single_lookup/5000: Analyzing
+phase3_v2_single_lookup/5000
+                        time:   [13.862 µs 14.292 µs 14.769 µs]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+Benchmarking phase3_v2_single_lookup/10000
+Benchmarking phase3_v2_single_lookup/10000: Warming up for 3.0000 s
+Benchmarking phase3_v2_single_lookup/10000: Collecting 100 samples in estimated 5.0641 s (167k iterations)
+Benchmarking phase3_v2_single_lookup/10000: Analyzing
+phase3_v2_single_lookup/10000
+                        time:   [28.016 µs 29.185 µs 30.362 µs]
+
+Benchmarking phase3_v2_throughput/100
+Benchmarking phase3_v2_throughput/100: Warming up for 3.0000 s
+Benchmarking phase3_v2_throughput/100: Collecting 100 samples in estimated 5.4320 s (15k iterations)
+Benchmarking phase3_v2_throughput/100: Analyzing
+phase3_v2_throughput/100
+                        time:   [355.70 µs 364.44 µs 373.84 µs]
+Benchmarking phase3_v2_throughput/500
+Benchmarking phase3_v2_throughput/500: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 6.8s, enable flat sampling, or reduce sample count to 60.
+Benchmarking phase3_v2_throughput/500: Collecting 100 samples in estimated 6.8324 s (5050 iterations)
+Benchmarking phase3_v2_throughput/500: Analyzing
+phase3_v2_throughput/500
+                        time:   [1.3577 ms 1.3970 ms 1.4413 ms]
+Benchmarking phase3_v2_throughput/1000
+Benchmarking phase3_v2_throughput/1000: Warming up for 3.0000 s
+Benchmarking phase3_v2_throughput/1000: Collecting 100 samples in estimated 5.1446 s (1800 iterations)
+Benchmarking phase3_v2_throughput/1000: Analyzing
+phase3_v2_throughput/1000
+                        time:   [2.9428 ms 2.9979 ms 3.0513 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) low mild
+Benchmarking phase3_v2_throughput/5000
+Benchmarking phase3_v2_throughput/5000: Warming up for 3.0000 s
+Benchmarking phase3_v2_throughput/5000: Collecting 100 samples in estimated 5.5976 s (400 iterations)
+Benchmarking phase3_v2_throughput/5000: Analyzing
+phase3_v2_throughput/5000
+                        time:   [14.615 ms 14.856 ms 15.095 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  3 (3.00%) low mild
+  1 (1.00%) high mild
+Benchmarking phase3_v2_throughput/10000
+Benchmarking phase3_v2_throughput/10000: Warming up for 3.0000 s
+Benchmarking phase3_v2_throughput/10000: Collecting 100 samples in estimated 5.9446 s (200 iterations)
+Benchmarking phase3_v2_throughput/10000: Analyzing
+phase3_v2_throughput/10000
+                        time:   [28.425 ms 28.962 ms 29.496 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) low mild
+
+Benchmarking phase3_v2_quantum_cache/hot_routes
+Benchmarking phase3_v2_quantum_cache/hot_routes: Warming up for 3.0000 s
+Benchmarking phase3_v2_quantum_cache/hot_routes: Collecting 100 samples in estimated 5.0003 s (76M iterations)
+Benchmarking phase3_v2_quantum_cache/hot_routes: Analyzing
+phase3_v2_quantum_cache/hot_routes
+                        time:   [65.255 ns 65.863 ns 66.474 ns]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) low mild
+Benchmarking phase3_v2_quantum_cache/cold_routes
+Benchmarking phase3_v2_quantum_cache/cold_routes: Warming up for 3.0000 s
+Benchmarking phase3_v2_quantum_cache/cold_routes: Collecting 100 samples in estimated 5.1464 s (167k iterations)
+Benchmarking phase3_v2_quantum_cache/cold_routes: Analyzing
+phase3_v2_quantum_cache/cold_routes
+                        time:   [30.945 µs 31.292 µs 31.632 µs]
+Found 9 outliers among 100 measurements (9.00%)
+  1 (1.00%) low mild
+  6 (6.00%) high mild
+  2 (2.00%) high severe
+
+Benchmarking phase3_v2_dimensional_folding/100
+Benchmarking phase3_v2_dimensional_folding/100: Warming up for 3.0000 s
+Benchmarking phase3_v2_dimensional_folding/100: Collecting 100 samples in estimated 5.0001 s (13M iterations)
+Benchmarking phase3_v2_dimensional_folding/100: Analyzing
+phase3_v2_dimensional_folding/100
+                        time:   [367.43 ns 374.84 ns 382.20 ns]
+Found 4 outliers among 100 measurements (4.00%)
+  3 (3.00%) low mild
+  1 (1.00%) high mild
+Benchmarking phase3_v2_dimensional_folding/1000
+Benchmarking phase3_v2_dimensional_folding/1000: Warming up for 3.0000 s
+Benchmarking phase3_v2_dimensional_folding/1000: Collecting 100 samples in estimated 5.0050 s (1.7M iterations)
+Benchmarking phase3_v2_dimensional_folding/1000: Analyzing
+phase3_v2_dimensional_folding/1000
+                        time:   [2.7574 µs 2.7886 µs 2.8203 µs]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) low mild
+Benchmarking phase3_v2_dimensional_folding/10000
+Benchmarking phase3_v2_dimensional_folding/10000: Warming up for 3.0000 s
+Benchmarking phase3_v2_dimensional_folding/10000: Collecting 100 samples in estimated 5.1094 s (172k iterations)
+Benchmarking phase3_v2_dimensional_folding/10000: Analyzing
+phase3_v2_dimensional_folding/10000
+                        time:   [29.040 µs 29.392 µs 29.797 µs]
+Found 6 outliers among 100 measurements (6.00%)
+  1 (1.00%) low severe
+  1 (1.00%) low mild
+  3 (3.00%) high mild
+  1 (1.00%) high severe
+
+Benchmarking phase3_v2_insert/100
+Benchmarking phase3_v2_insert/100: Warming up for 3.0000 s
+Benchmarking phase3_v2_insert/100: Collecting 100 samples in estimated 6.5643 s (400 iterations)
+Benchmarking phase3_v2_insert/100: Analyzing
+phase3_v2_insert/100    time:   [16.708 ms 16.909 ms 17.113 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+Benchmarking phase3_v2_insert/1000
+Benchmarking phase3_v2_insert/1000: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 13.7s, or reduce sample count to 30.
+Benchmarking phase3_v2_insert/1000: Collecting 100 samples in estimated 13.744 s (100 iterations)
+Benchmarking phase3_v2_insert/1000: Analyzing
+phase3_v2_insert/1000   time:   [154.55 ms 157.64 ms 160.85 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+Benchmarking phase3_v2_insert/10000
+Benchmarking phase3_v2_insert/10000: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 205.2s, or reduce sample count to 10.
+Benchmarking phase3_v2_insert/10000: Collecting 100 samples in estimated 205.24 s (100 iterations)
+Benchmarking phase3_v2_insert/10000: Analyzing
+phase3_v2_insert/10000  time:   [1.8388 s 1.8523 s 1.8658 s]
+

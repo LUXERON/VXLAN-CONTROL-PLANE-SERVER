@@ -1,0 +1,197 @@
+warning: fields `quantum_state`, `cluster_id`, and `compressed_coords` are never read
+  --> src/phase2/qagfhg_engine.rs:56:5
+   |
+52 | struct RouteEntry {
+   |        ---------- fields in this struct
+...
+56 |     quantum_state: QuantumState,
+   |     ^^^^^^^^^^^^^
+57 |     cluster_id: u16,
+   |     ^^^^^^^^^^
+58 |     compressed_coords: [f32; 4],
+   |     ^^^^^^^^^^^^^^^^^
+   |
+   = note: `RouteEntry` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: fields `spectral_analyzer`, `dimensional_folder`, `hint_generator`, and `target_dim` are never read
+  --> src/phase2/qagfhg_engine.rs:66:5
+   |
+62 | pub struct QAGFHGEngine {
+   |            ------------ fields in this struct
+...
+66 |     spectral_analyzer: Arc<RwLock<SpectralAnalyzer>>,
+   |     ^^^^^^^^^^^^^^^^^
+67 |     /// Dimensional folder
+68 |     dimensional_folder: Arc<RwLock<DimensionalFolder>>,
+   |     ^^^^^^^^^^^^^^^^^^
+69 |     /// Hardware hint generator
+70 |     hint_generator: Arc<HintGenerator>,
+   |     ^^^^^^^^^^^^^^
+...
+76 |     target_dim: usize,
+   |     ^^^^^^^^^^
+
+warning: fields `eigenstate`, `morton_code`, and `cluster_id` are never read
+  --> src/phase2/qagfhg_v2_engine.rs:24:5
+   |
+22 | struct CollapsedQuantumState {
+   |        --------------------- fields in this struct
+23 |     /// Pre-computed eigenstate (collapsed)
+24 |     eigenstate: u32,
+   |     ^^^^^^^^^^
+25 |     /// Morton-encoded 4D coordinates (Z-order curve)
+26 |     morton_code: u64,
+   |     ^^^^^^^^^^^
+27 |     /// Cluster ID from bit pattern (O(1) computation)
+28 |     cluster_id: u16,
+   |     ^^^^^^^^^^
+   |
+   = note: `CollapsedQuantumState` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: fields `p50_latency_ns`, `p95_latency_ns`, and `p99_latency_ns` are never read
+  --> src/unified/performance_monitor.rs:20:5
+   |
+14 | struct Metrics {
+   |        ------- fields in this struct
+...
+20 |     p50_latency_ns: u64,
+   |     ^^^^^^^^^^^^^^
+21 |     p95_latency_ns: u64,
+   |     ^^^^^^^^^^^^^^
+22 |     p99_latency_ns: u64,
+   |     ^^^^^^^^^^^^^^
+   |
+   = note: `Metrics` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: `uao-qtcam-unified` (lib) generated 4 warnings
+   Compiling uao-qtcam-unified v1.0.0 (/mnt/c/VINDUREX/MY PYTHON_BIZ _DEV/ECDLP SPECTRAL SOLVER/uao_qtcam_unified)
+    Finished `bench` profile [optimized] target(s) in 38.55s
+     Running benches/revolutionary_benchmark.rs (target/release/deps/revolutionary_benchmark-d37ce86b547443d2)
+Gnuplot not found, using plotters backend
+Benchmarking single_lookup/Phase1-AHGF
+Benchmarking single_lookup/Phase1-AHGF: Warming up for 3.0000 s
+Benchmarking single_lookup/Phase1-AHGF: Collecting 100 samples in estimated 10.129 s (106k iterations)
+Benchmarking single_lookup/Phase1-AHGF: Analyzing
+single_lookup/Phase1-AHGF
+                        time:   [74.076 µs 74.963 µs 75.974 µs]
+Found 6 outliers among 100 measurements (6.00%)
+  1 (1.00%) low mild
+  5 (5.00%) high mild
+
+Benchmarking single_lookup/Phase2-V2-Revolutionary
+Benchmarking single_lookup/Phase2-V2-Revolutionary: Warming up for 3.0000 s
+Benchmarking single_lookup/Phase2-V2-Revolutionary: Collecting 100 samples in estimated 10.775 s (66k iterations)
+Benchmarking single_lookup/Phase2-V2-Revolutionary: Analyzing
+single_lookup/Phase2-V2-Revolutionary
+                        time:   [163.97 µs 166.29 µs 168.64 µs]
+Found 3 outliers among 100 measurements (3.00%)
+  2 (2.00%) low mild
+  1 (1.00%) high mild
+
+Benchmarking throughput/Phase1-AHGF-10K-lookups
+Benchmarking throughput/Phase1-AHGF-10K-lookups: Warming up for 3.0000 s
+Benchmarking throughput/Phase1-AHGF-10K-lookups: Collecting 100 samples in estimated 17.184 s (400 iterations)
+Benchmarking throughput/Phase1-AHGF-10K-lookups: Analyzing
+throughput/Phase1-AHGF-10K-lookups
+                        time:   [46.220 ms 46.942 ms 47.670 ms]
+                        change: [-0.6009% +1.1602% +3.0310%] (p = 0.21 > 0.05)
+                        No change in performance detected.
+Found 8 outliers among 100 measurements (8.00%)
+  5 (5.00%) low mild
+  3 (3.00%) high mild
+Benchmarking throughput/Phase2-V2-Revolutionary-10K-lookups
+Benchmarking throughput/Phase2-V2-Revolutionary-10K-lookups: Warming up for 3.0000 s
+Benchmarking throughput/Phase2-V2-Revolutionary-10K-lookups: Collecting 100 samples in estimated 16.142 s (1000 iterations)
+Benchmarking throughput/Phase2-V2-Revolutionary-10K-lookups: Analyzing
+throughput/Phase2-V2-Revolutionary-10K-lookups
+                        time:   [17.030 ms 17.346 ms 17.670 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high mild
+
+Benchmarking scalability/Phase1/100
+Benchmarking scalability/Phase1/100: Warming up for 3.0000 s
+Benchmarking scalability/Phase1/100: Collecting 100 samples in estimated 20.096 s (773k iterations)
+Benchmarking scalability/Phase1/100: Analyzing
+scalability/Phase1/100  time:   [25.866 µs 26.711 µs 27.616 µs]
+                        change: [+22.162% +25.398% +28.769%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high severe
+Benchmarking scalability/Phase2-V2/100
+Benchmarking scalability/Phase2-V2/100: Warming up for 3.0000 s
+Benchmarking scalability/Phase2-V2/100: Collecting 100 samples in estimated 20.258 s (116k iterations)
+Benchmarking scalability/Phase2-V2/100: Analyzing
+scalability/Phase2-V2/100
+                        time:   [131.66 µs 136.78 µs 142.02 µs]
+Benchmarking scalability/Phase1/500
+Benchmarking scalability/Phase1/500: Warming up for 3.0000 s
+Benchmarking scalability/Phase1/500: Collecting 100 samples in estimated 20.164 s (414k iterations)
+Benchmarking scalability/Phase1/500: Analyzing
+scalability/Phase1/500  time:   [42.224 µs 43.000 µs 43.848 µs]
+                        change: [+6.6911% +9.1005% +11.573%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Benchmarking scalability/Phase2-V2/500
+Benchmarking scalability/Phase2-V2/500: Warming up for 3.0000 s
+Benchmarking scalability/Phase2-V2/500: Collecting 100 samples in estimated 20.493 s (136k iterations)
+Benchmarking scalability/Phase2-V2/500: Analyzing
+scalability/Phase2-V2/500
+                        time:   [140.91 µs 143.82 µs 147.31 µs]
+Found 12 outliers among 100 measurements (12.00%)
+  3 (3.00%) low mild
+  7 (7.00%) high mild
+  2 (2.00%) high severe
+Benchmarking scalability/Phase1/1000
+Benchmarking scalability/Phase1/1000: Warming up for 3.0000 s
+Benchmarking scalability/Phase1/1000: Collecting 100 samples in estimated 20.221 s (227k iterations)
+Benchmarking scalability/Phase1/1000: Analyzing
+scalability/Phase1/1000 time:   [77.332 µs 78.376 µs 79.507 µs]
+                        change: [-1.0934% +1.7671% +4.6888%] (p = 0.29 > 0.05)
+                        No change in performance detected.
+Found 4 outliers among 100 measurements (4.00%)
+  3 (3.00%) high mild
+  1 (1.00%) high severe
+Benchmarking scalability/Phase2-V2/1000
+Benchmarking scalability/Phase2-V2/1000: Warming up for 3.0000 s
+Benchmarking scalability/Phase2-V2/1000: Collecting 100 samples in estimated 20.431 s (121k iterations)
+Benchmarking scalability/Phase2-V2/1000: Analyzing
+scalability/Phase2-V2/1000
+                        time:   [166.89 µs 170.34 µs 173.93 µs]
+Found 2 outliers among 100 measurements (2.00%)
+  1 (1.00%) low mild
+  1 (1.00%) high mild
+Benchmarking scalability/Phase1/5000
+Benchmarking scalability/Phase1/5000: Warming up for 3.0000 s
+Benchmarking scalability/Phase1/5000: Collecting 100 samples in estimated 20.732 s (45k iterations)
+Benchmarking scalability/Phase1/5000: Analyzing
+scalability/Phase1/5000 time:   [435.38 µs 447.54 µs 460.59 µs]
+                        change: [-13.675% -10.094% -6.7847%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 6 outliers among 100 measurements (6.00%)
+  5 (5.00%) high mild
+  1 (1.00%) high severe
+Benchmarking scalability/Phase2-V2/5000
+Benchmarking scalability/Phase2-V2/5000: Warming up for 3.0000 s
+Benchmarking scalability/Phase2-V2/5000: Collecting 100 samples in estimated 20.595 s (111k iterations)
+Benchmarking scalability/Phase2-V2/5000: Analyzing
+scalability/Phase2-V2/5000
+                        time:   [163.81 µs 167.28 µs 171.35 µs]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high severe
+Benchmarking scalability/Phase1/10000
+Benchmarking scalability/Phase1/10000: Warming up for 3.0000 s
+Benchmarking scalability/Phase1/10000: Collecting 100 samples in estimated 23.538 s (25k iterations)
+Benchmarking scalability/Phase1/10000: Analyzing
+scalability/Phase1/10000
+                        time:   [791.97 µs 809.64 µs 830.10 µs]
+                        change: [-18.821% -16.482% -13.880%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+Benchmarking scalability/Phase2-V2/10000
+Benchmarking scalability/Phase2-V2/10000: Warming up for 3.0000 s
+Benchmarking scalability/Phase2-V2/10000: Collecting 100 samples in estimated 20.439 s (111k iterations)
+Benchmarking scalability/Phase2-V2/10000: Analyzing
+scalability/Phase2-V2/10000
+                        time:   [155.17 µs 157.95 µs 161.12 µs]
+

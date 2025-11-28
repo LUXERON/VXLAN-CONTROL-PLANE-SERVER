@@ -23,13 +23,13 @@ symmetrix-galois = { path = "crates/symmetrix-galois" }
 symmetrix-tensor = { path = "crates/symmetrix-tensor" }
 
 # QANBAN Integration - Quantum-Accelerated Network Bandwidth Amplification
-qanban = { path = "../QUANTUM-ACCELERATED-NETWORK-BANDWIDTH-OPTIMIZATION-QANBA-" }
+qanban = { path = "qanban" }
 
 # QAGML Integration - Quantum-Accelerated GPU Memory Lookup (10M× memory + 2M× bus width amplification)
-qagml = { path = "../GPU-MEMORY-UPGRADE" }
+qagml = { path = "qagml" }
 
 # UAO-QTCAM Integration - Unified Software-Defined TCAM (1,250× speedup over hardware TCAM)
-uao-qtcam-unified = { path = "../UAO-QTCAM" }
+uao-qtcam-unified = { path = "uao-qtcam" }
 
 # Core mathematical libraries
 num-bigint = "0.4"

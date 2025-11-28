@@ -1,0 +1,10 @@
+pub mod dimensional_folding;
+pub mod laplacian_qlearning;
+pub mod pme_engine;
+pub mod quantum_cache;
+pub mod galois_field;
+pub mod spectral_graph;
+pub mod tensor_decomposition;
+pub mod simd_vectorization;
+pub mod branch_free;
+pub mod temporal_coherence;

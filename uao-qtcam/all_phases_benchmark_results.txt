@@ -1,0 +1,316 @@
+   Compiling uao-qtcam-unified v1.0.0 (/mnt/c/VINDUREX/MY PYTHON_BIZ _DEV/ECDLP SPECTRAL SOLVER/uao_qtcam_unified)
+warning: fields `quantum_state`, `cluster_id`, and `compressed_coords` are never read
+  --> src/phase2/qagfhg_engine.rs:56:5
+   |
+52 | struct RouteEntry {
+   |        ---------- fields in this struct
+...
+56 |     quantum_state: QuantumState,
+   |     ^^^^^^^^^^^^^
+57 |     cluster_id: u16,
+   |     ^^^^^^^^^^
+58 |     compressed_coords: [f32; 4],
+   |     ^^^^^^^^^^^^^^^^^
+   |
+   = note: `RouteEntry` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: fields `spectral_analyzer`, `dimensional_folder`, `hint_generator`, and `target_dim` are never read
+  --> src/phase2/qagfhg_engine.rs:66:5
+   |
+62 | pub struct QAGFHGEngine {
+   |            ------------ fields in this struct
+...
+66 |     spectral_analyzer: Arc<RwLock<SpectralAnalyzer>>,
+   |     ^^^^^^^^^^^^^^^^^
+67 |     /// Dimensional folder
+68 |     dimensional_folder: Arc<RwLock<DimensionalFolder>>,
+   |     ^^^^^^^^^^^^^^^^^^
+69 |     /// Hardware hint generator
+70 |     hint_generator: Arc<HintGenerator>,
+   |     ^^^^^^^^^^^^^^
+...
+76 |     target_dim: usize,
+   |     ^^^^^^^^^^
+
+warning: fields `eigenstate`, `morton_code`, and `cluster_id` are never read
+  --> src/phase2/qagfhg_v2_engine.rs:24:5
+   |
+22 | struct CollapsedQuantumState {
+   |        --------------------- fields in this struct
+23 |     /// Pre-computed eigenstate (collapsed)
+24 |     eigenstate: u32,
+   |     ^^^^^^^^^^
+25 |     /// Morton-encoded 4D coordinates (Z-order curve)
+26 |     morton_code: u64,
+   |     ^^^^^^^^^^^
+27 |     /// Cluster ID from bit pattern (O(1) computation)
+28 |     cluster_id: u16,
+   |     ^^^^^^^^^^
+   |
+   = note: `CollapsedQuantumState` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: field `tensor_factors` is never read
+  --> src/phase3/scrtt_engine.rs:29:5
+   |
+22 | struct HybridTrieNode {
+   |        -------------- field in this struct
+...
+29 |     tensor_factors: Vec<TensorFactor>,
+   |     ^^^^^^^^^^^^^^
+   |
+   = note: `HybridTrieNode` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: fields `left_child` and `right_child` are never read
+  --> src/phase3/scrtt_engine.rs:44:5
+   |
+34 | struct PatriciaNode {
+   |        ------------ fields in this struct
+...
+44 |     left_child: Option<u32>,
+   |     ^^^^^^^^^^
+45 |     right_child: Option<u32>,
+   |     ^^^^^^^^^^^
+   |
+   = note: `PatriciaNode` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: fields `vector` and `weight` are never read
+  --> src/phase3/scrtt_engine.rs:52:5
+   |
+50 | struct TensorFactor {
+   |        ------------ fields in this struct
+51 |     /// Factor vector
+52 |     vector: Vec<f32>,
+   |     ^^^^^^
+53 |     /// Weight (λ in CP decomposition)
+54 |     weight: f32,
+   |     ^^^^^^
+   |
+   = note: `TensorFactor` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: fields `prefix`, `next_hop`, `metric`, and `cohomology_class` are never read
+  --> src/phase3/scrtt_engine.rs:61:5
+   |
+59 | struct SheafSection {
+   |        ------------ fields in this struct
+60 |     /// Prefix covered by this section
+61 |     prefix: Prefix,
+   |     ^^^^^^
+62 |     /// Next hop
+63 |     next_hop: String,
+   |     ^^^^^^^^
+64 |     /// Metric
+65 |     metric: u32,
+   |     ^^^^^^
+66 |     /// Cohomology class (for consistency checking)
+67 |     cohomology_class: u32,
+   |     ^^^^^^^^^^^^^^^^
+   |
+   = note: `SheafSection` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: fields `p50_latency_ns`, `p95_latency_ns`, and `p99_latency_ns` are never read
+  --> src/unified/performance_monitor.rs:20:5
+   |
+14 | struct Metrics {
+   |        ------- fields in this struct
+...
+20 |     p50_latency_ns: u64,
+   |     ^^^^^^^^^^^^^^
+21 |     p95_latency_ns: u64,
+   |     ^^^^^^^^^^^^^^
+22 |     p99_latency_ns: u64,
+   |     ^^^^^^^^^^^^^^
+   |
+   = note: `Metrics` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: `uao-qtcam-unified` (lib) generated 8 warnings
+    Finished `bench` profile [optimized] target(s) in 28.78s
+     Running benches/all_phases_benchmark.rs (target/release/deps/all_phases_benchmark-456ef0968f561d98)
+Gnuplot not found, using plotters backend
+Benchmarking single_lookup_all_phases/Phase1-AHGF
+Benchmarking single_lookup_all_phases/Phase1-AHGF: Warming up for 3.0000 s
+Benchmarking single_lookup_all_phases/Phase1-AHGF: Collecting 100 samples in estimated 10.419 s (121k iterations)
+Benchmarking single_lookup_all_phases/Phase1-AHGF: Analyzing
+single_lookup_all_phases/Phase1-AHGF
+                        time:   [80.336 µs 81.301 µs 82.298 µs]
+Found 2 outliers among 100 measurements (2.00%)
+  1 (1.00%) low severe
+  1 (1.00%) high severe
+Benchmarking single_lookup_all_phases/Phase2-V2-Revolutionary
+Benchmarking single_lookup_all_phases/Phase2-V2-Revolutionary: Warming up for 3.0000 s
+Benchmarking single_lookup_all_phases/Phase2-V2-Revolutionary: Collecting 100 samples in estimated 10.473 s (66k iterations)
+Benchmarking single_lookup_all_phases/Phase2-V2-Revolutionary: Analyzing
+single_lookup_all_phases/Phase2-V2-Revolutionary
+                        time:   [151.44 µs 152.81 µs 154.23 µs]
+Found 4 outliers among 100 measurements (4.00%)
+  4 (4.00%) low mild
+Benchmarking single_lookup_all_phases/Phase3-SCRTT
+Benchmarking single_lookup_all_phases/Phase3-SCRTT: Warming up for 3.0000 s
+Benchmarking single_lookup_all_phases/Phase3-SCRTT: Collecting 100 samples in estimated 10.219 s (121k iterations)
+Benchmarking single_lookup_all_phases/Phase3-SCRTT: Analyzing
+single_lookup_all_phases/Phase3-SCRTT
+                        time:   [80.012 µs 80.824 µs 81.601 µs]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) low mild
+
+Benchmarking throughput_all_phases/Phase1-AHGF-10K
+Benchmarking throughput_all_phases/Phase1-AHGF-10K: Warming up for 3.0000 s
+Benchmarking throughput_all_phases/Phase1-AHGF-10K: Collecting 100 samples in estimated 15.294 s (400 iterations)
+Benchmarking throughput_all_phases/Phase1-AHGF-10K: Analyzing
+throughput_all_phases/Phase1-AHGF-10K
+                        time:   [37.425 ms 37.721 ms 38.020 ms]
+Benchmarking throughput_all_phases/Phase2-V2-Revolutionary-10K
+Benchmarking throughput_all_phases/Phase2-V2-Revolutionary-10K: Warming up for 3.0000 s
+Benchmarking throughput_all_phases/Phase2-V2-Revolutionary-10K: Collecting 100 samples in estimated 15.946 s (1300 iterations)
+Benchmarking throughput_all_phases/Phase2-V2-Revolutionary-10K: Analyzing
+throughput_all_phases/Phase2-V2-Revolutionary-10K
+                        time:   [11.979 ms 12.111 ms 12.250 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high mild
+Benchmarking throughput_all_phases/Phase3-SCRTT-10K
+Benchmarking throughput_all_phases/Phase3-SCRTT-10K: Warming up for 3.0000 s
+Benchmarking throughput_all_phases/Phase3-SCRTT-10K: Collecting 100 samples in estimated 17.038 s (400 iterations)
+Benchmarking throughput_all_phases/Phase3-SCRTT-10K: Analyzing
+throughput_all_phases/Phase3-SCRTT-10K
+                        time:   [42.081 ms 42.329 ms 42.576 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  2 (2.00%) low mild
+  1 (1.00%) high mild
+
+Benchmarking all_phases_scalability/Phase1-AHGF/100
+Benchmarking all_phases_scalability/Phase1-AHGF/100: Warming up for 3.0000 s
+Benchmarking all_phases_scalability/Phase1-AHGF/100: Collecting 100 samples in estimated 20.036 s (889k iterations)
+Benchmarking all_phases_scalability/Phase1-AHGF/100: Analyzing
+all_phases_scalability/Phase1-AHGF/100
+                        time:   [22.062 µs 22.204 µs 22.347 µs]
+Found 3 outliers among 100 measurements (3.00%)
+  1 (1.00%) low severe
+  1 (1.00%) low mild
+  1 (1.00%) high severe
+Benchmarking all_phases_scalability/Phase2-V2-Revolutionary/100
+Benchmarking all_phases_scalability/Phase2-V2-Revolutionary/100: Warming up for 3.0000 s
+Benchmarking all_phases_scalability/Phase2-V2-Revolutionary/100: Collecting 100 samples in estimated 20.306 s (157k iterations)
+Benchmarking all_phases_scalability/Phase2-V2-Revolutionary/100: Analyzing
+all_phases_scalability/Phase2-V2-Revolutionary/100
+                        time:   [131.51 µs 132.33 µs 133.19 µs]
+Found 3 outliers among 100 measurements (3.00%)
+  1 (1.00%) low severe
+  2 (2.00%) low mild
+Benchmarking all_phases_scalability/Phase3-SCRTT/100
+Benchmarking all_phases_scalability/Phase3-SCRTT/100: Warming up for 3.0000 s
+Benchmarking all_phases_scalability/Phase3-SCRTT/100: Collecting 100 samples in estimated 20.048 s (1.4M iterations)
+Benchmarking all_phases_scalability/Phase3-SCRTT/100: Analyzing
+all_phases_scalability/Phase3-SCRTT/100
+                        time:   [16.403 µs 17.706 µs 19.001 µs]
+Found 15 outliers among 100 measurements (15.00%)
+  1 (1.00%) high mild
+  14 (14.00%) high severe
+Benchmarking all_phases_scalability/Phase1-AHGF/500
+Benchmarking all_phases_scalability/Phase1-AHGF/500: Warming up for 3.0000 s
+Benchmarking all_phases_scalability/Phase1-AHGF/500: Collecting 100 samples in estimated 20.056 s (409k iterations)
+Benchmarking all_phases_scalability/Phase1-AHGF/500: Analyzing
+all_phases_scalability/Phase1-AHGF/500
+                        time:   [39.953 µs 40.133 µs 40.321 µs]
+Found 2 outliers among 100 measurements (2.00%)
+  1 (1.00%) low mild
+  1 (1.00%) high mild
+Benchmarking all_phases_scalability/Phase2-V2-Revolutionary/500
+Benchmarking all_phases_scalability/Phase2-V2-Revolutionary/500: Warming up for 3.0000 s
+Benchmarking all_phases_scalability/Phase2-V2-Revolutionary/500: Collecting 100 samples in estimated 20.682 s (152k iterations)
+Benchmarking all_phases_scalability/Phase2-V2-Revolutionary/500: Analyzing
+all_phases_scalability/Phase2-V2-Revolutionary/500
+                        time:   [132.81 µs 133.34 µs 133.94 µs]
+Found 3 outliers among 100 measurements (3.00%)
+  1 (1.00%) low mild
+  2 (2.00%) high mild
+Benchmarking all_phases_scalability/Phase3-SCRTT/500
+Benchmarking all_phases_scalability/Phase3-SCRTT/500: Warming up for 3.0000 s
+Benchmarking all_phases_scalability/Phase3-SCRTT/500: Collecting 100 samples in estimated 20.113 s (510k iterations)
+Benchmarking all_phases_scalability/Phase3-SCRTT/500: Analyzing
+all_phases_scalability/Phase3-SCRTT/500
+                        time:   [38.309 µs 38.563 µs 38.800 µs]
+Found 4 outliers among 100 measurements (4.00%)
+  2 (2.00%) low mild
+  2 (2.00%) high mild
+Benchmarking all_phases_scalability/Phase1-AHGF/1000
+Benchmarking all_phases_scalability/Phase1-AHGF/1000: Warming up for 3.0000 s
+Benchmarking all_phases_scalability/Phase1-AHGF/1000: Collecting 100 samples in estimated 20.192 s (288k iterations)
+Benchmarking all_phases_scalability/Phase1-AHGF/1000: Analyzing
+all_phases_scalability/Phase1-AHGF/1000
+                        time:   [71.952 µs 72.269 µs 72.565 µs]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) low mild
+Benchmarking all_phases_scalability/Phase2-V2-Revolutionary/1000
+Benchmarking all_phases_scalability/Phase2-V2-Revolutionary/1000: Warming up for 3.0000 s
+Benchmarking all_phases_scalability/Phase2-V2-Revolutionary/1000: Collecting 100 samples in estimated 20.381 s (157k iterations)
+Benchmarking all_phases_scalability/Phase2-V2-Revolutionary/1000: Analyzing
+all_phases_scalability/Phase2-V2-Revolutionary/1000
+                        time:   [129.81 µs 130.44 µs 131.14 µs]
+Found 6 outliers among 100 measurements (6.00%)
+  1 (1.00%) low mild
+  5 (5.00%) high mild
+Benchmarking all_phases_scalability/Phase3-SCRTT/1000
+Benchmarking all_phases_scalability/Phase3-SCRTT/1000: Warming up for 3.0000 s
+Benchmarking all_phases_scalability/Phase3-SCRTT/1000: Collecting 100 samples in estimated 20.030 s (268k iterations)
+Benchmarking all_phases_scalability/Phase3-SCRTT/1000: Analyzing
+all_phases_scalability/Phase3-SCRTT/1000
+                        time:   [73.746 µs 74.415 µs 75.070 µs]
+Found 3 outliers among 100 measurements (3.00%)
+  1 (1.00%) low severe
+  1 (1.00%) low mild
+  1 (1.00%) high mild
+Benchmarking all_phases_scalability/Phase1-AHGF/5000
+Benchmarking all_phases_scalability/Phase1-AHGF/5000: Warming up for 3.0000 s
+Benchmarking all_phases_scalability/Phase1-AHGF/5000: Collecting 100 samples in estimated 20.626 s (61k iterations)
+Benchmarking all_phases_scalability/Phase1-AHGF/5000: Analyzing
+all_phases_scalability/Phase1-AHGF/5000
+                        time:   [344.19 µs 346.01 µs 347.91 µs]
+Found 9 outliers among 100 measurements (9.00%)
+  7 (7.00%) high mild
+  2 (2.00%) high severe
+Benchmarking all_phases_scalability/Phase2-V2-Revolutionary/5000
+Benchmarking all_phases_scalability/Phase2-V2-Revolutionary/5000: Warming up for 3.0000 s
+Benchmarking all_phases_scalability/Phase2-V2-Revolutionary/5000: Collecting 100 samples in estimated 20.154 s (146k iterations)
+Benchmarking all_phases_scalability/Phase2-V2-Revolutionary/5000: Analyzing
+all_phases_scalability/Phase2-V2-Revolutionary/5000
+                        time:   [136.65 µs 138.46 µs 140.29 µs]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+Benchmarking all_phases_scalability/Phase3-SCRTT/5000
+Benchmarking all_phases_scalability/Phase3-SCRTT/5000: Warming up for 3.0000 s
+Benchmarking all_phases_scalability/Phase3-SCRTT/5000: Collecting 100 samples in estimated 20.560 s (50k iterations)
+Benchmarking all_phases_scalability/Phase3-SCRTT/5000: Analyzing
+all_phases_scalability/Phase3-SCRTT/5000
+                        time:   [404.99 µs 407.51 µs 409.86 µs]
+Found 5 outliers among 100 measurements (5.00%)
+  2 (2.00%) low mild
+  2 (2.00%) high mild
+  1 (1.00%) high severe
+Benchmarking all_phases_scalability/Phase1-AHGF/10000
+Benchmarking all_phases_scalability/Phase1-AHGF/10000: Warming up for 3.0000 s
+Benchmarking all_phases_scalability/Phase1-AHGF/10000: Collecting 100 samples in estimated 23.260 s (30k iterations)
+Benchmarking all_phases_scalability/Phase1-AHGF/10000: Analyzing
+all_phases_scalability/Phase1-AHGF/10000
+                        time:   [734.24 µs 738.14 µs 742.15 µs]
+Found 9 outliers among 100 measurements (9.00%)
+  1 (1.00%) low mild
+  6 (6.00%) high mild
+  2 (2.00%) high severe
+Benchmarking all_phases_scalability/Phase2-V2-Revolutionary/10000
+Benchmarking all_phases_scalability/Phase2-V2-Revolutionary/10000: Warming up for 3.0000 s
+Benchmarking all_phases_scalability/Phase2-V2-Revolutionary/10000: Collecting 100 samples in estimated 20.253 s (146k iterations)
+Benchmarking all_phases_scalability/Phase2-V2-Revolutionary/10000: Analyzing
+all_phases_scalability/Phase2-V2-Revolutionary/10000
+                        time:   [136.75 µs 137.29 µs 137.84 µs]
+Found 3 outliers among 100 measurements (3.00%)
+  2 (2.00%) high mild
+  1 (1.00%) high severe
+Benchmarking all_phases_scalability/Phase3-SCRTT/10000
+Benchmarking all_phases_scalability/Phase3-SCRTT/10000: Warming up for 3.0000 s
+Benchmarking all_phases_scalability/Phase3-SCRTT/10000: Collecting 100 samples in estimated 21.863 s (25k iterations)
+Benchmarking all_phases_scalability/Phase3-SCRTT/10000: Analyzing
+all_phases_scalability/Phase3-SCRTT/10000
+                        time:   [822.32 µs 829.68 µs 837.52 µs]
+Found 5 outliers among 100 measurements (5.00%)
+  5 (5.00%) high mild
+

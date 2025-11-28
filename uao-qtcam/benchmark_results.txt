@@ -1,0 +1,227 @@
+   Compiling zerocopy v0.8.28
+   Compiling serde v1.0.228
+   Compiling num-traits v0.2.19
+   Compiling serde_urlencoded v0.7.1
+   Compiling tinytemplate v1.2.1
+   Compiling num-complex v0.4.6
+   Compiling approx v0.5.1
+   Compiling num-integer v0.1.46
+   Compiling plotters v0.3.7
+   Compiling axum v0.7.9
+   Compiling num-rational v0.4.2
+   Compiling simba v0.9.1
+   Compiling ppv-lite86 v0.2.21
+   Compiling half v2.7.1
+   Compiling ciborium-ll v0.2.2
+   Compiling rand_chacha v0.3.1
+   Compiling ciborium v0.2.2
+   Compiling rand v0.8.5
+   Compiling criterion v0.5.1
+   Compiling nalgebra v0.33.2
+   Compiling uao-qtcam-unified v1.0.0 (/mnt/c/VINDUREX/MY PYTHON_BIZ _DEV/ECDLP SPECTRAL SOLVER/uao_qtcam_unified)
+warning: fields `quantum_state`, `cluster_id`, and `compressed_coords` are never read
+  --> src/phase2/qagfhg_engine.rs:56:5
+   |
+52 | struct RouteEntry {
+   |        ---------- fields in this struct
+...
+56 |     quantum_state: QuantumState,
+   |     ^^^^^^^^^^^^^
+57 |     cluster_id: u16,
+   |     ^^^^^^^^^^
+58 |     compressed_coords: [f32; 4],
+   |     ^^^^^^^^^^^^^^^^^
+   |
+   = note: `RouteEntry` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: fields `spectral_analyzer`, `dimensional_folder`, `hint_generator`, and `target_dim` are never read
+  --> src/phase2/qagfhg_engine.rs:66:5
+   |
+62 | pub struct QAGFHGEngine {
+   |            ------------ fields in this struct
+...
+66 |     spectral_analyzer: Arc<RwLock<SpectralAnalyzer>>,
+   |     ^^^^^^^^^^^^^^^^^
+67 |     /// Dimensional folder
+68 |     dimensional_folder: Arc<RwLock<DimensionalFolder>>,
+   |     ^^^^^^^^^^^^^^^^^^
+69 |     /// Hardware hint generator
+70 |     hint_generator: Arc<HintGenerator>,
+   |     ^^^^^^^^^^^^^^
+...
+76 |     target_dim: usize,
+   |     ^^^^^^^^^^
+
+warning: fields `p50_latency_ns`, `p95_latency_ns`, and `p99_latency_ns` are never read
+  --> src/unified/performance_monitor.rs:20:5
+   |
+14 | struct Metrics {
+   |        ------- fields in this struct
+...
+20 |     p50_latency_ns: u64,
+   |     ^^^^^^^^^^^^^^
+21 |     p95_latency_ns: u64,
+   |     ^^^^^^^^^^^^^^
+22 |     p99_latency_ns: u64,
+   |     ^^^^^^^^^^^^^^
+   |
+   = note: `Metrics` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: `uao-qtcam-unified` (lib) generated 3 warnings
+warning: unused variable: `rt`
+   --> benches/performance.rs:227:9
+    |
+227 |     let rt = tokio::runtime::Runtime::new().unwrap();
+    |         ^^ help: if this is intentional, prefix it with an underscore: `_rt`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `rt`
+   --> benches/performance.rs:267:9
+    |
+267 |     let rt = tokio::runtime::Runtime::new().unwrap();
+    |         ^^ help: if this is intentional, prefix it with an underscore: `_rt`
+
+warning: `uao-qtcam-unified` (bench "performance") generated 2 warnings
+    Finished `bench` profile [optimized] target(s) in 38.16s
+     Running benches/performance.rs (target/release/deps/performance-b648139c26909d29)
+Gnuplot not found, using plotters backend
+Benchmarking single_lookup_latency/Phase1-AHGF
+Benchmarking single_lookup_latency/Phase1-AHGF: Warming up for 3.0000 s
+Benchmarking single_lookup_latency/Phase1-AHGF: Collecting 1000 samples in estimated 10.058 s (112k iterations)
+Benchmarking single_lookup_latency/Phase1-AHGF: Analyzing
+single_lookup_latency/Phase1-AHGF
+                        time:   [90.537 µs 91.085 µs 91.639 µs]
+Found 13 outliers among 1000 measurements (1.30%)
+  2 (0.20%) low mild
+  10 (1.00%) high mild
+  1 (0.10%) high severe
+Benchmarking single_lookup_latency/Phase2-QAGFHG
+Benchmarking single_lookup_latency/Phase2-QAGFHG: Warming up for 3.0000 s
+
+Warning: Unable to complete 1000 samples in 10.0s. You may wish to increase target time to 23.1s, or reduce sample count to 430.
+Benchmarking single_lookup_latency/Phase2-QAGFHG: Collecting 1000 samples in estimated 23.068 s (1000 iterations)
+Benchmarking single_lookup_latency/Phase2-QAGFHG: Analyzing
+single_lookup_latency/Phase2-QAGFHG
+                        time:   [23.467 ms 23.578 ms 23.690 ms]
+Found 11 outliers among 1000 measurements (1.10%)
+  2 (0.20%) low mild
+  9 (0.90%) high mild
+
+Benchmarking throughput/Phase1-AHGF-10K-lookups
+Benchmarking throughput/Phase1-AHGF-10K-lookups: Warming up for 3.0000 s
+Benchmarking throughput/Phase1-AHGF-10K-lookups: Collecting 100 samples in estimated 17.395 s (400 iterations)
+Benchmarking throughput/Phase1-AHGF-10K-lookups: Analyzing
+throughput/Phase1-AHGF-10K-lookups
+                        time:   [45.991 ms 46.403 ms 46.824 ms]
+Benchmarking throughput/Phase2-QAGFHG-10K-lookups
+Benchmarking throughput/Phase2-QAGFHG-10K-lookups: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 15.0s. You may wish to increase target time to 284.0s, or reduce sample count to 10.
+Benchmarking throughput/Phase2-QAGFHG-10K-lookups: Collecting 100 samples in estimated 283.99 s (100 iterations)
+Benchmarking throughput/Phase2-QAGFHG-10K-lookups: Analyzing
+throughput/Phase2-QAGFHG-10K-lookups
+                        time:   [2.8386 s 2.9219 s 3.0210 s]
+Found 2 outliers among 100 measurements (2.00%)
+  1 (1.00%) high mild
+  1 (1.00%) high severe
+
+Benchmarking scalability/Phase1/100
+Benchmarking scalability/Phase1/100: Warming up for 3.0000 s
+Benchmarking scalability/Phase1/100: Collecting 50 samples in estimated 10.005 s (435k iterations)
+Benchmarking scalability/Phase1/100: Analyzing
+scalability/Phase1/100  time:   [21.272 µs 21.698 µs 22.078 µs]
+Benchmarking scalability/Phase2/100
+Benchmarking scalability/Phase2/100: Warming up for 3.0000 s
+Benchmarking scalability/Phase2/100: Collecting 50 samples in estimated 11.110 s (450 iterations)
+Benchmarking scalability/Phase2/100: Analyzing
+scalability/Phase2/100  time:   [24.016 ms 25.046 ms 26.114 ms]
+Benchmarking scalability/Phase1/500
+Benchmarking scalability/Phase1/500: Warming up for 3.0000 s
+Benchmarking scalability/Phase1/500: Collecting 50 samples in estimated 10.013 s (238k iterations)
+Benchmarking scalability/Phase1/500: Analyzing
+scalability/Phase1/500  time:   [40.648 µs 41.213 µs 41.739 µs]
+Benchmarking scalability/Phase2/500
+Benchmarking scalability/Phase2/500: Warming up for 3.0000 s
+Benchmarking scalability/Phase2/500: Collecting 50 samples in estimated 10.438 s (400 iterations)
+Benchmarking scalability/Phase2/500: Analyzing
+scalability/Phase2/500  time:   [27.213 ms 27.857 ms 28.508 ms]
+Benchmarking scalability/Phase1/1000
+Benchmarking scalability/Phase1/1000: Warming up for 3.0000 s
+Benchmarking scalability/Phase1/1000: Collecting 50 samples in estimated 10.089 s (139k iterations)
+Benchmarking scalability/Phase1/1000: Analyzing
+scalability/Phase1/1000 time:   [75.576 µs 77.153 µs 78.694 µs]
+Found 2 outliers among 50 measurements (4.00%)
+  2 (4.00%) high mild
+Benchmarking scalability/Phase2/1000
+Benchmarking scalability/Phase2/1000: Warming up for 3.0000 s
+Benchmarking scalability/Phase2/1000: Collecting 50 samples in estimated 10.824 s (450 iterations)
+Benchmarking scalability/Phase2/1000: Analyzing
+scalability/Phase2/1000 time:   [24.953 ms 25.304 ms 25.659 ms]
+Found 4 outliers among 50 measurements (8.00%)
+  3 (6.00%) low mild
+  1 (2.00%) high mild
+Benchmarking scalability/Phase1/5000
+Benchmarking scalability/Phase1/5000: Warming up for 3.0000 s
+Benchmarking scalability/Phase1/5000: Collecting 50 samples in estimated 10.210 s (22k iterations)
+Benchmarking scalability/Phase1/5000: Analyzing
+scalability/Phase1/5000 time:   [478.68 µs 490.39 µs 502.48 µs]
+Benchmarking scalability/Phase2/5000
+Benchmarking scalability/Phase2/5000: Warming up for 3.0000 s
+Benchmarking scalability/Phase2/5000: Collecting 50 samples in estimated 10.156 s (350 iterations)
+Benchmarking scalability/Phase2/5000: Analyzing
+scalability/Phase2/5000 time:   [26.437 ms 27.073 ms 27.688 ms]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low mild
+Benchmarking scalability/Phase1/10000
+Benchmarking scalability/Phase1/10000: Warming up for 3.0000 s
+Benchmarking scalability/Phase1/10000: Collecting 50 samples in estimated 10.680 s (11k iterations)
+Benchmarking scalability/Phase1/10000: Analyzing
+scalability/Phase1/10000
+                        time:   [976.38 µs 997.79 µs 1.0190 ms]
+Benchmarking scalability/Phase2/10000
+Benchmarking scalability/Phase2/10000: Warming up for 3.0000 s
+Benchmarking scalability/Phase2/10000: Collecting 50 samples in estimated 10.033 s (350 iterations)
+Benchmarking scalability/Phase2/10000: Analyzing
+scalability/Phase2/10000
+                        time:   [27.626 ms 28.171 ms 28.692 ms]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) low mild
+
+Benchmarking insert_performance/Phase1-AHGF-1K-inserts
+Benchmarking insert_performance/Phase1-AHGF-1K-inserts: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 10.0s. You may wish to increase target time to 51.4s, or reduce sample count to 10.
+Benchmarking insert_performance/Phase1-AHGF-1K-inserts: Collecting 100 samples in estimated 51.409 s (100 iterations)
+Benchmarking insert_performance/Phase1-AHGF-1K-inserts: Analyzing
+insert_performance/Phase1-AHGF-1K-inserts
+                        time:   [553.77 ms 570.41 ms 587.31 ms]
+Benchmarking insert_performance/Phase2-QAGFHG-1K-inserts
+Benchmarking insert_performance/Phase2-QAGFHG-1K-inserts: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 10.0s. You may wish to increase target time to 63.9s, or reduce sample count to 10.
+Benchmarking insert_performance/Phase2-QAGFHG-1K-inserts: Collecting 100 samples in estimated 63.851 s (100 iterations)
+Benchmarking insert_performance/Phase2-QAGFHG-1K-inserts: Analyzing
+insert_performance/Phase2-QAGFHG-1K-inserts
+                        time:   [640.92 ms 648.10 ms 655.11 ms]
+
+Benchmarking mixed_workload/Phase1-AHGF-mixed
+Benchmarking mixed_workload/Phase1-AHGF-mixed: Warming up for 3.0000 s
+
+Warning: Unable to complete 50 samples in 15.0s. You may wish to increase target time to 35.6s, or reduce sample count to 20.
+Benchmarking mixed_workload/Phase1-AHGF-mixed: Collecting 50 samples in estimated 35.550 s (50 iterations)
+Benchmarking mixed_workload/Phase1-AHGF-mixed: Analyzing
+mixed_workload/Phase1-AHGF-mixed
+                        time:   [689.34 ms 699.91 ms 710.83 ms]
+Found 1 outliers among 50 measurements (2.00%)
+  1 (2.00%) high mild
+Benchmarking mixed_workload/Phase2-QAGFHG-mixed
+Benchmarking mixed_workload/Phase2-QAGFHG-mixed: Warming up for 3.0000 s
+
+Warning: Unable to complete 50 samples in 15.0s. You may wish to increase target time to 42.5s, or reduce sample count to 10.
+Benchmarking mixed_workload/Phase2-QAGFHG-mixed: Collecting 50 samples in estimated 42.525 s (50 iterations)
+Benchmarking mixed_workload/Phase2-QAGFHG-mixed: Analyzing
+mixed_workload/Phase2-QAGFHG-mixed
+                        time:   [726.20 ms 746.03 ms 766.17 ms]
+
