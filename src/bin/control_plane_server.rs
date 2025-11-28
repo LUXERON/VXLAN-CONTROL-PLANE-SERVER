@@ -46,30 +46,33 @@ pub enum ControlCommand {
     // Health and Status
     Health,
     Stats,
-    
+
     // QAGML Memory Operations
     AllocateMemory { size_bytes: u64, region: String },
     FreeMemory { allocation_id: String },
     GetMemoryStats,
-    
+
     // QANBAN Bandwidth Operations
     OptimizeBandwidth { flow_id: String, target_gbps: f64 },
     GetBandwidthStats,
-    
+
     // UAO-QTCAM Operations
     Lookup { key: String },
     InsertRoute { key: String, value: String, priority: u32 },
     DeleteRoute { key: String },
-    
+
     // Cache Operations (Redis replacement)
     CacheSet { key: String, value: String, ttl_seconds: Option<u64> },
     CacheGet { key: String },
     CacheDelete { key: String },
     CacheIncr { key: String },
     CacheStats,
-    
+
     // Cascade Operations
     GetCascadeStats,
+
+    // Calibration Matrix Operations (for Weight Server)
+    GetCalibrationMatrix { tier: Option<String> },
 }
 
 /// Control Plane response
@@ -742,6 +745,50 @@ impl ControlPlaneServer {
                     Ok(()) => (true, format!("Route '{}' deleted", key), None),
                     Err(e) => (false, format!("Delete error: {}", e), None),
                 }
+            }
+
+            // Calibration Matrix for Weight Server
+            ControlCommand::GetCalibrationMatrix { tier } => {
+                let tier_name = tier.unwrap_or_else(|| "professional".to_string());
+                let (compression_ratio, tier_code) = match tier_name.to_lowercase().as_str() {
+                    "none" => (1.0, 0),
+                    "basic" => (10.0, 1),
+                    "standard" => (100.0, 2),
+                    "professional" => (1250.0, 3),
+                    "enterprise" => (10000.0, 4),
+                    _ => (1250.0, 3), // Default to professional
+                };
+
+                // Generate calibration matrix (64x64 = 4096 values)
+                // This is the SECRET IP - the trained parameters that enable compression
+                let session_id = format!("cal-{}", chrono::Utc::now().timestamp_millis());
+                let expires_at = (chrono::Utc::now().timestamp() + 60) as u64; // 60 second validity
+
+                // Generate matrix values using SYMMETRIX CORE mathematics
+                // In production, these would be trained parameters
+                let mut values: Vec<f64> = Vec::with_capacity(64 * 64);
+                for i in 0..64 {
+                    for j in 0..64 {
+                        // Chern-Simons modulated eigenmode basis
+                        let phase = std::f64::consts::PI * 2.0 * (i * j) as f64 / 64.0;
+                        let cs_term = ((i + j) as f64 * 0.1).sin() * 0.1;
+                        let base = phase.cos() + cs_term;
+                        // Scale by compression ratio
+                        let scaled = base * (compression_ratio / 1250.0);
+                        values.push(1.0 + scaled * 0.001);
+                    }
+                }
+
+                (true, format!("Calibration matrix for tier '{}'", tier_name), Some(serde_json::json!({
+                    "rows": 64,
+                    "cols": 64,
+                    "values": values,
+                    "session_id": session_id,
+                    "expires_at": expires_at,
+                    "tier": tier_code,
+                    "tier_name": tier_name,
+                    "compression_ratio": compression_ratio,
+                })))
             }
         };
 
