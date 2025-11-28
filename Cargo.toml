@@ -108,6 +108,10 @@ path = "src/bin/cli.rs"
 name = "symmetrix-fabric"
 path = "src/bin/symmetrix_fabric.rs"
 
+[[bin]]
+name = "symmetrix-cascade-benchmark"
+path = "src/bin/cascade_benchmark.rs"
+
 [features]
 default = ["sheaf-scheduler", "galois-acceleration", "tensor-folding", "qanban-integration", "qagml-integration", "uao-qtcam-integration"]
 sheaf-scheduler = []
