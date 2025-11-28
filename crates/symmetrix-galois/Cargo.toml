@@ -1,0 +1,31 @@
+[package]
+name = "symmetrix-galois"
+version = "0.1.0"
+edition = "2021"
+authors = ["SYMMETRIX COMPUTING LTD"]
+description = "Galois field arithmetic acceleration for Symmetrix mathematical engine"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+num-bigint = "0.4"
+num-traits = "0.2"
+serde = { version = "1.0", features = ["derive"] }
+thiserror = "1.0"
+tracing = "0.1"
+rayon = "1.8"
+
+# SIMD optimizations
+wide = "0.7"
+
+[dev-dependencies]
+criterion = "0.5"
+proptest = "1.4"
+rand = "0.8"
+
+[features]
+default = ["simd", "crt-acceleration"]
+simd = []
+crt-acceleration = []
+avx512 = []
+
+

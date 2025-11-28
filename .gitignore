@@ -1,0 +1,85 @@
+# Build artifacts
+target/
+*.exe
+*.pdb
+*.dll
+*.so
+*.dylib
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.pyc
+venv/
+luxeron_venv/
+*.egg-info/
+
+# Documentation and non-code files (keeping only README.md)
+*.MD
+!README.md
+*.md
+!README.md
+
+# Business/Marketing directories
+BROCHURE*/
+BUSINESS*/
+CONVERSATION_ARCHIVE/
+EXASCALE_SLA_STRATEGY/
+HARDWARE RESEARCH/
+LUXERON_CPU_TOPOLOGICAL*/
+LUXERON_IMAGES/
+LUXERON_SYMMETRIX_CORE_BROCHURE*/
+PDF GENERATOR/
+QUANTUM HYPERVISOR*/
+SYMMETRIX CORE/
+SYMMETRIX CORE SALE SCHEME/
+SYMMETRIX_19K_SUPERCOMPUTER/
+SYMMETRIX_BUILD_GUIDE/
+SYMMETRIX_BUSINESS_STRATEGY/
+SYMMETRIX_COMMERCIAL_ANALYSIS/
+SYMMETRIX_EVOLUTION_EXPLAINED/
+SYMMETRIX_INDUSTRY_DISRUPTION_ANALYSIS/
+SYMMETRIX_LAPTOP_TESTING/
+SYMMETRIX_NVIDIA_ACQUISITION/
+SYMMETRIX_PROOF_EXPLANATION/
+SYMMETRIX_TRANSPARENT_VALIDATION/
+SYMMETRIX_v5_IMPLEMENTATION/
+TECHNOLOGY CONTEXT/
+TERAHERTZ_INTEGRATION/
+THE RIGHT BROCHURE/
+luxeron_website/
+tt_compression/
+
+# ISO builds
+iso/
+*.zip
+
+# Generated files
+*.html
+gpu-comparison-report.html
+LUXERON_SYMMETRIX_CORE_BROCHURE_COMPLETE.html
+
+# Kernel module builds
+kernel/*.ko
+kernel/*.o
+kernel/*.mod
+kernel/*.mod.c
+kernel/modules.order
+kernel/Module.symvers
+kernel/.*.cmd
+
+# Logs
+*.log
+build.log
+
+# Test artifacts
+test_results.txt
+
+# Lock files (optional - uncomment if you want to track Cargo.lock)
+# Cargo.lock
+

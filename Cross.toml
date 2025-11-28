@@ -1,0 +1,22 @@
+# SYMMETRIX CROSS-COMPILATION CONFIGURATION
+# Revolutionary Mathematical Operating System - Cross Build Setup
+
+[build]
+# Use Podman as container engine
+container-engine = "podman"
+
+[target.x86_64-unknown-linux-musl]
+# Linux target configuration
+image = "ghcr.io/cross-rs/x86_64-unknown-linux-musl:main"
+
+[target.x86_64-unknown-linux-gnu]
+# Alternative Linux target with glibc
+image = "ghcr.io/cross-rs/x86_64-unknown-linux-gnu:main"
+
+[build.env]
+# Environment variables for cross-compilation
+passthrough = [
+    "SYMMETRIX_VERSION",
+    "SYMMETRIX_BUILD_MODE",
+    "SYMMETRIX_OPTIMIZE"
+]

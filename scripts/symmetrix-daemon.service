@@ -1,0 +1,57 @@
+[Unit]
+Description=Symmetrix Mathematical Operating System Daemon
+Documentation=https://docs.symmetrix.dev
+After=network.target network-online.target
+Wants=network-online.target
+Requires=local-fs.target
+
+[Service]
+Type=notify
+ExecStart=/opt/symmetrix/bin/symmetrix-daemon --config /etc/symmetrix/config.toml
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=5
+User=root
+Group=root
+
+# Environment variables
+Environment=RUST_LOG=info
+Environment=SYMMETRIX_CONFIG=/etc/symmetrix/config.toml
+Environment=SYMMETRIX_MAX_CONTAINERS=5000
+Environment=SYMMETRIX_CACHE_SIZE=67108864
+
+# Security settings
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/symmetrix /var/log/symmetrix /tmp
+PrivateTmp=true
+PrivateDevices=false
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictRealtime=true
+RestrictNamespaces=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=32768
+LimitMEMLOCK=infinity
+
+# Capabilities (needed for container management)
+CapabilityBoundingSet=CAP_SYS_ADMIN CAP_NET_ADMIN CAP_SYS_PTRACE CAP_SYS_RESOURCE
+AmbientCapabilities=CAP_SYS_ADMIN CAP_NET_ADMIN CAP_SYS_PTRACE CAP_SYS_RESOURCE
+
+# Working directory
+WorkingDirectory=/var/lib/symmetrix
+
+# Standard output and error
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=symmetrix-daemon
+
+# Watchdog
+WatchdogSec=30
+
+[Install]
+WantedBy=multi-user.target
