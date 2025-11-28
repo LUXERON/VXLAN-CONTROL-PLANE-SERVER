@@ -24,18 +24,14 @@ services:
     runtime: rust
     plan: pro_plus  # $85/month - 4 GB RAM, 2 CPUs
     region: oregon
-    branch: master
-    rootDir: SYMMETRIX CORE
+    branch: main
+    # rootDir not needed - files are at repo root
 
-    # Build configuration - STATIC LINKING with musl
-    buildCommand: |
-      rustup target add x86_64-unknown-linux-musl
-      apt-get update && apt-get install -y musl-tools
-      RUSTFLAGS='-C target-feature=+crt-static' cargo build --release --target x86_64-unknown-linux-musl --bin symmetrix-control-plane
-      cp target/x86_64-unknown-linux-musl/release/symmetrix-control-plane ./symmetrix-control-plane
+    # Build configuration - standard release build
+    buildCommand: cargo build --release --bin symmetrix-control-plane
 
-    # Start command - statically linked binary
-    startCommand: ./symmetrix-control-plane
+    # Start command - release binary
+    startCommand: ./target/release/symmetrix-control-plane
 
     # Health check endpoint
     healthCheckPath: /health
