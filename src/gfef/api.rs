@@ -7,6 +7,7 @@
 //! - POST /v1/extract - Trigger GFEF extraction for a model
 //! - GET /v1/extract/{job_id} - Get extraction job status
 //! - GET /v1/indices - List all GFEF indices
+//! - POST /v1/index/upload - Receive GFEF index from Extractor (Triple IP Lock entry point)
 //! - WS /ws/events - WebSocket for real-time watcher events
 
 use axum::{
@@ -22,11 +23,12 @@ use std::sync::Arc;
 use std::path::PathBuf;
 use tokio::sync::{RwLock, mpsc};
 use std::collections::HashMap;
+use tracing::{info, warn, error};
 
 use super::prediction::{ActivationPredictor, PredictionRequest, PredictionResponse, PredictionError};
 use super::calibration::{CalibrationService, CalibrationMatrix};
 use super::subscription::{SubscriptionManager, SubscriptionTier, Subscription};
-use super::index::{GFEFIndexGenerator, IndexConfig, IndexMetadata};
+use super::index::{GFEFIndex, GFEFIndexGenerator, IndexConfig, IndexMetadata, LayerIndex, NeuronSignature};
 use super::storage::IndexStorage;
 use super::extraction::{ExtractionService, ExtractionConfig, ExtractionResult};
 use super::websocket::{WsEventBroadcaster, ws_handler};
@@ -70,6 +72,99 @@ impl AppState {
     pub fn get_broadcaster(&self) -> Arc<WsEventBroadcaster> {
         self.ws_broadcaster.clone()
     }
+
+    /// Load GFEF index from file (for startup or manual loading)
+    /// This is the CORE of Triple IP Lock - index stays on Control Plane FOREVER
+    pub async fn load_index_from_file(&self, path: &std::path::Path) -> Result<IndexMetadata, String> {
+        info!("🔐 Loading GFEF index from file: {:?}", path);
+
+        // Read JSON metadata
+        let json_path = path.with_extension("json");
+        let json_content = std::fs::read_to_string(&json_path)
+            .map_err(|e| format!("Failed to read index JSON: {}", e))?;
+
+        // Parse the index metadata from our Python-generated format
+        let raw: serde_json::Value = serde_json::from_str(&json_content)
+            .map_err(|e| format!("Failed to parse index JSON: {}", e))?;
+
+        // Convert to our GFEFIndex format
+        let index = Self::convert_python_index_to_gfef(&raw)?;
+
+        let metadata = IndexMetadata {
+            id: index.id,
+            customer_id: index.customer_id,
+            model_id: index.model_id.clone(),
+            model_name: index.model_name.clone(),
+            generated_at: index.generated_at,
+            total_neurons: index.total_neurons,
+            num_layers: index.layers.len(),
+            index_size_bytes: std::fs::metadata(&json_path).map(|m| m.len()).unwrap_or(0),
+        };
+
+        // Register the index with the predictor
+        {
+            let mut predictor = self.predictor.write().await;
+            predictor.register_index(index);
+        }
+
+        info!("✅ GFEF index loaded: {} ({} neurons, {} layers)",
+            metadata.model_name, metadata.total_neurons, metadata.num_layers);
+        info!("🔒 Triple IP Lock ACTIVE - Index secured on Control Plane");
+
+        Ok(metadata)
+    }
+
+    /// Convert Python-generated index format to our Rust GFEFIndex
+    fn convert_python_index_to_gfef(raw: &serde_json::Value) -> Result<GFEFIndex, String> {
+        let model_name = raw["model"].as_str().unwrap_or("unknown").to_string();
+        let k_components = raw["k_components"].as_u64().unwrap_or(32) as u32;
+        let fft_bins = raw["fft_bins"].as_u64().unwrap_or(16) as u32;
+        let total_neurons = raw["total_neurons"].as_u64().unwrap_or(0);
+
+        // Parse layers
+        let layers_raw = raw["layers"].as_array()
+            .ok_or("Missing layers array")?;
+
+        let mut layers = Vec::new();
+        for layer_raw in layers_raw {
+            let layer_id = layer_raw["layer_id"].as_u64().unwrap_or(0) as u32;
+            let layer_name = layer_raw["name"].as_str().unwrap_or("").to_string();
+            let neurons = layer_raw["neurons"].as_u64().unwrap_or(0) as u32;
+
+            // Parse pc_shape to get input_dim
+            let pc_shape = layer_raw["pc_shape"].as_array();
+            let input_dim = pc_shape
+                .and_then(|arr| arr.first())
+                .and_then(|v| v.as_u64())
+                .unwrap_or(0) as u32;
+
+            layers.push(LayerIndex {
+                layer_id,
+                layer_name,
+                num_neurons: neurons,
+                input_dim,
+                k_components,
+                principal_components: Vec::new(), // Will be loaded from binary
+                signatures: Vec::new(), // Will be loaded from binary
+            });
+        }
+
+        Ok(GFEFIndex {
+            id: Uuid::new_v4(),
+            customer_id: Uuid::nil(), // Will be set when customer uploads
+            model_id: model_name.clone(),
+            model_name,
+            generated_at: chrono::Utc::now(),
+            expires_at: None,
+            layers,
+            total_neurons,
+            config: IndexConfig {
+                k_components,
+                fft_bins,
+                target_sparsity: 0.95,
+            },
+        })
+    }
 }
 
 /// Create API router
@@ -83,6 +178,9 @@ pub fn create_router(state: Arc<AppState>) -> Router {
         .route("/v1/subscription/:customer_id", get(get_subscription))
         .route("/v1/subscription", post(create_subscription))
         .route("/v1/indices", get(list_indices))
+        .route("/v1/indices/stats", get(get_predictor_stats))
+        // GFEF Index upload - Triple IP Lock entry point
+        .route("/v1/index/upload", post(upload_index))
         // GFEF Extraction endpoints
         .route("/v1/extract", post(trigger_extraction))
         .route("/v1/extract/:job_id", get(get_extraction_status))
@@ -281,4 +379,129 @@ struct ExtractResponse {
     index_path: String,
     stats: Option<super::extraction::ExtractionStats>,
     error: Option<String>,
+}
+
+/// Request to upload a GFEF index (from Extractor to Control Plane)
+#[derive(Deserialize)]
+struct UploadIndexRequest {
+    /// Customer ID
+    customer_id: Uuid,
+    /// Model identifier
+    model_id: String,
+    /// Model name
+    model_name: String,
+    /// Index configuration
+    k_components: u32,
+    fft_bins: u32,
+    /// Total neurons in model
+    total_neurons: u64,
+    /// Layer metadata
+    layers: Vec<UploadLayerData>,
+}
+
+#[derive(Deserialize)]
+struct UploadLayerData {
+    layer_id: u32,
+    name: String,
+    neurons: u32,
+    input_dim: u32,
+}
+
+#[derive(Serialize)]
+struct UploadIndexResponse {
+    success: bool,
+    index_id: Uuid,
+    model_id: String,
+    total_neurons: u64,
+    num_layers: usize,
+    message: String,
+}
+
+#[derive(Serialize)]
+struct PredictorStatsResponse {
+    models_loaded: usize,
+    total_neurons: u64,
+    total_layers: usize,
+    target_sparsity: f32,
+    triple_ip_lock_active: bool,
+}
+
+/// Upload GFEF index from Extractor - TRIPLE IP LOCK ENTRY POINT
+/// Once the index is here, it NEVER leaves the Control Plane
+async fn upload_index(
+    State(state): State<Arc<AppState>>,
+    Json(request): Json<UploadIndexRequest>,
+) -> Result<Json<UploadIndexResponse>, (StatusCode, Json<ErrorResponse>)> {
+    info!("🔐 Receiving GFEF index upload for model: {}", request.model_name);
+    info!("   Customer: {}", request.customer_id);
+    info!("   Neurons: {}, Layers: {}", request.total_neurons, request.layers.len());
+
+    // Convert upload request to GFEFIndex
+    let layers: Vec<LayerIndex> = request.layers.iter().map(|l| {
+        LayerIndex {
+            layer_id: l.layer_id,
+            layer_name: l.name.clone(),
+            num_neurons: l.neurons,
+            input_dim: l.input_dim,
+            k_components: request.k_components,
+            principal_components: Vec::new(), // Would come from binary data
+            signatures: Vec::new(), // Would come from binary data
+        }
+    }).collect();
+
+    let index_id = Uuid::new_v4();
+    let num_layers = layers.len();
+
+    let index = GFEFIndex {
+        id: index_id,
+        customer_id: request.customer_id,
+        model_id: request.model_id.clone(),
+        model_name: request.model_name.clone(),
+        generated_at: chrono::Utc::now(),
+        expires_at: None,
+        layers,
+        total_neurons: request.total_neurons,
+        config: IndexConfig {
+            k_components: request.k_components,
+            fft_bins: request.fft_bins,
+            target_sparsity: 0.95,
+        },
+    };
+
+    // Register with predictor - THIS IS WHERE TRIPLE IP LOCK ACTIVATES
+    {
+        let mut predictor = state.predictor.write().await;
+        predictor.register_index(index);
+    }
+
+    info!("✅ GFEF index registered: {} ({} neurons)", request.model_name, request.total_neurons);
+    info!("🔒 TRIPLE IP LOCK ACTIVE - Index secured on Control Plane");
+    info!("   Lock 1: GFEF Index (SECURED)");
+    info!("   Lock 2: Calibration Matrix (rotating every 60s)");
+    info!("   Lock 3: Activation Prediction Service (real-time oracle)");
+
+    Ok(Json(UploadIndexResponse {
+        success: true,
+        index_id,
+        model_id: request.model_id,
+        total_neurons: request.total_neurons,
+        num_layers,
+        message: "GFEF index secured on Control Plane. Triple IP Lock ACTIVE.".to_string(),
+    }))
+}
+
+/// Get predictor statistics (how many indices loaded)
+async fn get_predictor_stats(
+    State(state): State<Arc<AppState>>,
+) -> Json<PredictorStatsResponse> {
+    let predictor = state.predictor.read().await;
+    let stats = predictor.stats();
+
+    Json(PredictorStatsResponse {
+        models_loaded: stats.models_loaded,
+        total_neurons: stats.total_neurons,
+        total_layers: stats.total_layers,
+        target_sparsity: stats.target_sparsity,
+        triple_ip_lock_active: stats.models_loaded > 0,
+    })
 }
