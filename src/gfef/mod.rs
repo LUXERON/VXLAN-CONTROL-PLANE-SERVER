@@ -36,6 +36,7 @@ pub mod prediction;
 pub mod storage;
 pub mod subscription;
 pub mod watcher;
+pub mod websocket;
 
 // Re-export main types
 pub use api::{create_router as create_gfef_router, AppState as GFEFAppState};
@@ -46,4 +47,5 @@ pub use prediction::{ActivationPredictor, PredictionRequest, PredictionResponse}
 pub use storage::IndexStorage;
 pub use subscription::{SubscriptionManager, SubscriptionTier, Subscription};
 pub use watcher::{ModelWatcherService, WatcherConfig, WatcherEvent, spawn_watcher_service};
+pub use websocket::{WsEventBroadcaster, WsMessage, ws_handler, spawn_event_forwarder};
 

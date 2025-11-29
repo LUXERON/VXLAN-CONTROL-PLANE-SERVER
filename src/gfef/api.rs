@@ -7,12 +7,14 @@
 //! - POST /v1/extract - Trigger GFEF extraction for a model
 //! - GET /v1/extract/{job_id} - Get extraction job status
 //! - GET /v1/indices - List all GFEF indices
+//! - WS /ws/events - WebSocket for real-time watcher events
 
 use axum::{
-    extract::{Path, State, Json},
+    extract::{Path, State, Json, ws::WebSocketUpgrade},
     routing::{get, post},
     Router,
     http::StatusCode,
+    response::IntoResponse,
 };
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -27,6 +29,7 @@ use super::subscription::{SubscriptionManager, SubscriptionTier, Subscription};
 use super::index::{GFEFIndexGenerator, IndexConfig, IndexMetadata};
 use super::storage::IndexStorage;
 use super::extraction::{ExtractionService, ExtractionConfig, ExtractionResult};
+use super::websocket::{WsEventBroadcaster, ws_handler};
 
 /// Shared application state
 pub struct AppState {
@@ -38,6 +41,7 @@ pub struct AppState {
     pub extraction_service: Option<ExtractionService>,
     pub extraction_jobs: RwLock<HashMap<Uuid, ExtractionResult>>,
     pub extraction_result_rx: Option<RwLock<mpsc::Receiver<ExtractionResult>>>,
+    pub ws_broadcaster: Arc<WsEventBroadcaster>,
 }
 
 impl AppState {
@@ -51,6 +55,7 @@ impl AppState {
             extraction_service: None,
             extraction_jobs: RwLock::new(HashMap::new()),
             extraction_result_rx: None,
+            ws_broadcaster: Arc::new(WsEventBroadcaster::new(1000)),
         }
     }
 
@@ -60,10 +65,17 @@ impl AppState {
         self.extraction_result_rx = Some(RwLock::new(rx));
         self
     }
+
+    /// Get the WebSocket broadcaster for event forwarding
+    pub fn get_broadcaster(&self) -> Arc<WsEventBroadcaster> {
+        self.ws_broadcaster.clone()
+    }
 }
 
 /// Create API router
 pub fn create_router(state: Arc<AppState>) -> Router {
+    let broadcaster = state.ws_broadcaster.clone();
+
     Router::new()
         .route("/v1/health", get(health_check))
         .route("/v1/predict", post(predict_activation))
@@ -74,7 +86,19 @@ pub fn create_router(state: Arc<AppState>) -> Router {
         // GFEF Extraction endpoints
         .route("/v1/extract", post(trigger_extraction))
         .route("/v1/extract/:job_id", get(get_extraction_status))
+        // WebSocket endpoint for real-time events
+        .route("/ws/events", get(ws_events_handler))
         .with_state(state)
+        // Nest WebSocket broadcaster state
+        .layer(axum::Extension(broadcaster))
+}
+
+/// WebSocket events handler
+async fn ws_events_handler(
+    ws: WebSocketUpgrade,
+    axum::Extension(broadcaster): axum::Extension<Arc<WsEventBroadcaster>>,
+) -> impl IntoResponse {
+    ws.on_upgrade(move |socket| super::websocket::handle_socket_direct(socket, broadcaster))
 }
 
 // === Handlers ===

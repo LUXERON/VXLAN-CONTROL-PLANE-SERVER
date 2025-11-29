@@ -135,6 +135,10 @@ path = "src/bin/cascade_benchmark.rs"
 name = "symmetrix-control-plane"
 path = "src/bin/control_plane_server.rs"
 
+[[bin]]
+name = "gfef-cli"
+path = "src/bin/gfef_cli.rs"
+
 [features]
 default = ["sheaf-scheduler", "galois-acceleration", "tensor-folding", "qanban-integration", "qagml-integration", "uao-qtcam-integration"]
 sheaf-scheduler = []
